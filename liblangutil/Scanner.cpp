@@ -280,6 +280,30 @@ Token Scanner::skipSingleLineComment()
 	return Token::Whitespace;
 }
 
+bool Scanner::isLineTerminator() const
+{
+	return m_char == '\n' || (m_char == '\r' && !m_source->isPastEndOfInput(2) && m_source->get(1) == '\n');
+}
+
+bool Scanner::tryScanLineTerminator()
+{
+	if (m_char == '\n')
+	{
+		advance();
+		return true;
+	}
+
+	if (m_char == '\r')
+	{
+		advance();
+		if (!m_source->isPastEndOfInput(1) && m_source->get(0) == '\n')
+			advance();
+		return true;
+	}
+
+	return false;
+}
+
 Token Scanner::scanSingleLineDocComment()
 {
 	LiteralScope literal(this, LITERAL_TYPE_COMMENT);
@@ -289,7 +313,7 @@ Token Scanner::scanSingleLineDocComment()
 
 	while (!isSourcePastEndOfInput())
 	{
-		if (isLineTerminator(m_char))
+		if (tryScanLineTerminator())
 		{
 			// check if next line is also a documentation comment
 			skipWhitespace();
@@ -303,7 +327,6 @@ Token Scanner::scanSingleLineDocComment()
 			}
 			else
 				break; // next line is not a documentation comment, we are done
-
 		}
 		else if (isUnicodeLinebreak())
 			// Any line terminator that is not '\n' is considered to end the
@@ -343,13 +366,13 @@ Token Scanner::scanMultiLineDocComment()
 	bool endFound = false;
 	bool charsAdded = false;
 
-	while (isWhiteSpace(m_char) && !isLineTerminator(m_char))
+	while (isWhiteSpace(m_char) && !isLineTerminator())
 		advance();
 
 	while (!isSourcePastEndOfInput())
 	{
 		//handle newlines in multline comments
-		if (isLineTerminator(m_char))
+		if (isLineTerminator())
 		{
 			skipWhitespace();
 			if (!m_source->isPastEndOfInput(1) && m_source->get(0) == '*' && m_source->get(1) == '*')
@@ -664,10 +687,12 @@ void Scanner::scanToken()
 bool Scanner::scanEscape()
 {
 	char c = m_char;
-	advance();
+
 	// Skip escaped newlines.
-	if (isLineTerminator(c))
+	if (tryScanLineTerminator())
 		return true;
+	advance();
+
 	switch (c)
 	{
 	case '\'':  // fall through
