@@ -85,6 +85,21 @@ bool ControlFlowBuilder::visit(Conditional const& _conditional)
 	return false;
 }
 
+bool ControlFlowBuilder::visit(TryStatement const& _tryStatement)
+{
+	appendControlFlow(_tryStatement.externalCall());
+
+	auto nodes = splitFlow(_tryStatement.clauses().size());
+	for (size_t i = 0; i < _tryStatement.clauses().size(); ++i)
+	{
+		m_currentNode = nodes[i];
+		appendControlFlow(_tryStatement.clauses()[i]->block());
+	}
+	mergeFlow(nodes);
+
+	return false;
+}
+
 bool ControlFlowBuilder::visit(IfStatement const& _ifStatement)
 {
 	solAssert(!!m_currentNode, "");
