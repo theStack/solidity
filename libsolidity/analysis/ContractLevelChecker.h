@@ -69,8 +69,6 @@ private:
 		FunctionDefinition const* _baseConstructor,
 		ASTNode const* _argumentNode
 	);
-	void checkConstructor(ContractDefinition const& _contract);
-	void checkFallbackFunction(ContractDefinition const& _contract);
 	/// Checks that different functions with external visibility end up having different
 	/// external argument types (i.e. different signature).
 	void checkExternalTypeClashes(ContractDefinition const& _contract);

@@ -8,6 +8,7 @@ Breaking changes:
  * Command line interface: Add option to disable or choose hash method between IPFS and Swarm for the bytecode metadata.
  * General: Disallow explicit conversions from external function types to ``address`` and add a member called ``address`` to them as replacement.
  * General: New reserved keywords: ``virtual``.
+ * General: Split unnamed fallback functions into two cases defined using ``fallback()`` and ``ether()``.
  * Standard JSON Interface: Add option to disable or choose hash method between IPFS and Swarm for the bytecode metadata.
  * Syntax: ``push(element)`` for dynamic storage arrays do not return the new length anymore.
  * Type checker: Resulting type of exponentiation is equal to the type of the base. Also allow signed types for the base.

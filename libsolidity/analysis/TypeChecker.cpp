@@ -327,11 +327,12 @@ bool TypeChecker::visit(StructDefinition const& _struct)
 bool TypeChecker::visit(FunctionDefinition const& _function)
 {
 	bool isLibraryFunction = _function.inContractKind() == ContractDefinition::ContractKind::Library;
+
 	if (_function.isPayable())
 	{
 		if (isLibraryFunction)
 			m_errorReporter.typeError(_function.location(), "Library functions cannot be payable.");
-		if (!_function.isConstructor() && !_function.isFallback() && !_function.isPartOfExternalInterface())
+		if (!_function.isConstructor() && !_function.isFallback() && !_function.isEtherReceiver() && !_function.isPartOfExternalInterface())
 			m_errorReporter.typeError(_function.location(), "Internal functions cannot be payable.");
 	}
 	auto checkArgumentAndReturnParameter = [&](VariableDeclaration const& var) {
@@ -423,6 +424,66 @@ bool TypeChecker::visit(FunctionDefinition const& _function)
 		m_errorReporter.typeError(_function.location(), "Constructor must be implemented if declared.");
 	else if (isLibraryFunction && _function.visibility() <= FunctionDefinition::Visibility::Internal)
 		m_errorReporter.typeError(_function.location(), "Internal library function must be implemented if declared.");
+
+
+	if (_function.isFallback())
+	{
+		if (isLibraryFunction)
+			m_errorReporter.typeError(_function.location(), "Libraries cannot have fallback functions.");
+		if (_function.stateMutability() != StateMutability::NonPayable && _function.stateMutability() != StateMutability::Payable)
+			m_errorReporter.typeError(
+				_function.location(),
+				"Fallback function must be payable or non-payable, but is \"" +
+				stateMutabilityToString(_function.stateMutability()) +
+				"\"."
+			);
+		if (_function.visibility() != FunctionDefinition::Visibility::External)
+			m_errorReporter.typeError(_function.location(), "Fallback function must be defined as \"external\".");
+		if (!_function.returnParameters().empty())
+		{
+			if (_function.returnParameters().size() > 1 || *type(*_function.returnParameters().front()) != *TypeProvider::bytesMemory())
+				m_errorReporter.typeError(_function.returnParameterList()->location(), "Fallback function can only have a single \"bytes memory\" return value.");
+			else
+				m_errorReporter.typeError(_function.returnParameterList()->location(), "Return values for fallback functions are not yet implemented.");
+		}
+		if (!_function.parameters().empty())
+			m_errorReporter.typeError(_function.parameterList().location(), "Fallback function cannot take parameters.");
+
+	}
+	else if (_function.isEtherReceiver())
+	{
+		if (isLibraryFunction)
+			m_errorReporter.typeError(_function.location(), "Libraries cannot have receive ether functions.");
+
+		if (_function.stateMutability() != StateMutability::Payable)
+			m_errorReporter.typeError(
+				_function.location(),
+				"Receive ether function must be payable, but is \"" +
+				stateMutabilityToString(_function.stateMutability()) +
+				"\"."
+			);
+		if (_function.visibility() != FunctionDefinition::Visibility::External)
+			m_errorReporter.typeError(_function.location(), "Receive ether function must be defined as \"external\".");
+		if (!_function.returnParameters().empty())
+			m_errorReporter.typeError(_function.returnParameterList()->location(), "Receive ether function cannot return values.");
+		if (!_function.parameters().empty())
+			m_errorReporter.typeError(_function.parameterList().location(), "Receive ether function cannot take parameters.");
+	}
+	else if (_function.isConstructor())
+	{
+		if (!_function.returnParameters().empty())
+			m_errorReporter.typeError(_function.returnParameterList()->location(), "Non-empty \"returns\" directive for constructor.");
+		if (_function.stateMutability() != StateMutability::NonPayable && _function.stateMutability() != StateMutability::Payable)
+			m_errorReporter.typeError(
+				_function.location(),
+				"Constructor must be payable or non-payable, but is \"" +
+				stateMutabilityToString(_function.stateMutability()) +
+				"\"."
+			);
+		if (_function.visibility() != FunctionDefinition::Visibility::Public && _function.visibility() != FunctionDefinition::Visibility::Internal)
+			m_errorReporter.typeError(_function.location(), "Constructor must be public or internal.");
+	}
+
 	return false;
 }
 
