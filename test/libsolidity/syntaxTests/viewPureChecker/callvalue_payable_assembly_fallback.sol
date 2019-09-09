@@ -1,6 +1,6 @@
 contract C
 {
-    function () external payable {
+    fallback () external payable {
         uint x;
         assembly {
             x := callvalue()
