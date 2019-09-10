@@ -758,7 +758,6 @@ Grammar::
         AssemblyExpression |
         AssemblyLocalDefinition |
         AssemblyAssignment |
-        AssemblyStackAssignment |
         LabelDefinition |
         AssemblyIf |
         AssemblySwitch |
@@ -775,7 +774,6 @@ Grammar::
     AssemblyAssignment = IdentifierOrList ':=' AssemblyExpression
     IdentifierOrList = Identifier | '(' IdentifierList ')'
     IdentifierList = Identifier ( ',' Identifier)*
-    AssemblyStackAssignment = '=:' Identifier
     LabelDefinition = Identifier ':'
     AssemblyIf = 'if' AssemblyExpression AssemblyBlock
     AssemblySwitch = 'switch' AssemblyExpression AssemblyCase*
