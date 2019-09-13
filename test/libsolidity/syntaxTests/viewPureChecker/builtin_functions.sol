@@ -16,5 +16,5 @@ contract C {
         assert(true);
         x; y; z;
     }
-    fallback() payable external {}
+    receive() payable external {}
 }

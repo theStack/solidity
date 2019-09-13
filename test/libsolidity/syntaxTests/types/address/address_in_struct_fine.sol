@@ -15,6 +15,6 @@ contract B {
     function f() public {
         s.a = address(this);
     }
-    fallback() external payable {
+    receive() external payable {
     }
 }

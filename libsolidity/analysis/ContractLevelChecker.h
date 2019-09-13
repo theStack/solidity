@@ -79,6 +79,9 @@ private:
 	/// Checks base contracts for ABI compatibility
 	void checkBaseABICompatibility(ContractDefinition const& _contract);
 
+	/// Warns if the contract has a payable fallback, but no receive ether function.
+	void checkPayableFallbackWithoutReceive(ContractDefinition const& _contract);
+
 	langutil::ErrorReporter& m_errorReporter;
 };
 

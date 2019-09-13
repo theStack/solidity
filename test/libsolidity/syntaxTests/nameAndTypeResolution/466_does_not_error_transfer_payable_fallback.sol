@@ -2,7 +2,7 @@
 // because A does not have a payable fallback function.
 
 contract A {
-    fallback() payable external {}
+    receive() payable external {}
 }
 
 contract B {

@@ -6,7 +6,7 @@ contract C {
     function transfer(uint amount) public {
         address(this).transfer(amount); // to avoid pureness warning
     }
-    fallback() payable external {
+    receive() payable external {
     }
 }
 contract D {

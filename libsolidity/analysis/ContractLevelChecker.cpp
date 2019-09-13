@@ -45,6 +45,7 @@ bool ContractLevelChecker::check(ContractDefinition const& _contract)
 	checkHashCollisions(_contract);
 	checkLibraryRequirements(_contract);
 	checkBaseABICompatibility(_contract);
+	checkPayableFallbackWithoutReceive(_contract);
 
 	return Error::containsOnlyWarnings(m_errorReporter.errors());
 }
@@ -492,4 +493,16 @@ void ContractLevelChecker::checkBaseABICompatibility(ContractDefinition const& _
 			"Use \"pragma experimental ABIEncoderV2;\" for the inheriting contract as well to enable the feature."
 		);
 
+}
+
+void ContractLevelChecker::checkPayableFallbackWithoutReceive(ContractDefinition const& _contract)
+{
+	if (auto const* fallback = _contract.fallbackFunction())
+		if (fallback->isPayable())
+			if (!_contract.etherReceiverFunction())
+				m_errorReporter.warning(
+					_contract.location(),
+					"This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.",
+					SecondarySourceLocation{}.append("The payable fallback function is defined here.", fallback->location())
+				);
 }

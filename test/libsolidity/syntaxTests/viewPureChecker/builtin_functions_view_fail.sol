@@ -16,7 +16,7 @@ contract C {
         (bool success,) = address(this).call("");
         require(success);
     }
-    fallback() payable external {
+    receive() payable external {
     }
 }
 // ----
