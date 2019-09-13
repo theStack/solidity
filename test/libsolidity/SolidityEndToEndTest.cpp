@@ -1236,7 +1236,7 @@ BOOST_AUTO_TEST_CASE(transfer_ether)
 		}
 
 		contract C {
-			function () external payable {
+			receive () external payable {
 				revert();
 			}
 		}
@@ -1900,7 +1900,7 @@ BOOST_AUTO_TEST_CASE(contracts_as_addresses)
 {
 	char const* sourceCode = R"(
 		contract helper {
-			function() external payable { } // can receive ether
+			receive() external payable { } // can receive ether
 		}
 		contract test {
 			helper h;
@@ -2511,24 +2511,6 @@ BOOST_AUTO_TEST_CASE(super_alone)
 	ALSO_VIA_YUL(
 		compileAndRun(sourceCode, 0, "A");
 		ABI_CHECK(callContractFunction("f()"), encodeArgs());
-	)
-}
-
-BOOST_AUTO_TEST_CASE(inherited_fallback_function)
-{
-	char const* sourceCode = R"(
-		contract A {
-			uint data;
-			function() external { data = 1; }
-			function getData() public returns (uint r) { return data; }
-		}
-		contract B is A {}
-	)";
-	ALSO_VIA_YUL(
-		compileAndRun(sourceCode, 0, "B");
-		ABI_CHECK(callContractFunction("getData()"), encodeArgs(0));
-		ABI_CHECK(callContractFunction(""), encodeArgs());
-		ABI_CHECK(callContractFunction("getData()"), encodeArgs(1));
 	)
 }
 
@@ -3588,8 +3570,8 @@ BOOST_AUTO_TEST_CASE(call_forward_bytes)
 	char const* sourceCode = R"(
 		contract receiver {
 			uint public received;
-			function receive(uint x) public { received += x + 1; }
-			function() external { received = 0x80; }
+			function recv(uint x) public { received += x + 1; }
+			fallback() external { received = 0x80; }
 		}
 		contract sender {
 			constructor() public { rec = new receiver(); }
@@ -3602,7 +3584,7 @@ BOOST_AUTO_TEST_CASE(call_forward_bytes)
 		}
 	)";
 	compileAndRun(sourceCode, 0, "sender");
-	ABI_CHECK(callContractFunction("receive(uint256)", 7), bytes());
+	ABI_CHECK(callContractFunction("recv(uint256)", 7), bytes());
 	ABI_CHECK(callContractFunction("val()"), encodeArgs(0));
 	ABI_CHECK(callContractFunction("forward()"), encodeArgs(true));
 	ABI_CHECK(callContractFunction("val()"), encodeArgs(8));
@@ -3617,7 +3599,7 @@ BOOST_AUTO_TEST_CASE(call_forward_bytes_length)
 	char const* sourceCode = R"(
 		contract receiver {
 			uint public calledLength;
-			function() external { calledLength = msg.data.length; }
+			fallback() external { calledLength = msg.data.length; }
 		}
 		contract sender {
 			receiver rec;
