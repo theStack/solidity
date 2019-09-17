@@ -43,11 +43,12 @@ ReadCallback::Callback wrapReadCallback(CStyleReadFileCallback _readCallback = n
 	ReadCallback::Callback readCallback;
 	if (_readCallback)
 	{
-		readCallback = [=](string const& _path)
+		readCallback = [=](string const& _data, ReadCallback::Kind _callbackKind = ReadCallback::Kind::ReadFile)
 		{
 			char* contents_c = nullptr;
 			char* error_c = nullptr;
-			_readCallback(_path.c_str(), &contents_c, &error_c);
+			string inputWithKind{ReadCallback::kindString(_callbackKind) + _data};
+			_readCallback(inputWithKind.c_str(), &contents_c, &error_c);
 			ReadCallback::Result result;
 			result.success = true;
 			if (!contents_c && !error_c)
