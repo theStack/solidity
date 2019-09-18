@@ -59,7 +59,7 @@ Data locations are not only relevant for persistency of data, but also for the s
             x = memoryArray; // works, copies the whole array to storage
             uint[] storage y = x; // works, assigns a pointer, data location of y is storage
             y[7]; // fine, returns the 8th element
-            y.length = 2; // fine, modifies x through y
+            y.pop(); // fine, modifies x through y
             delete x; // fine, clears the array, also modifies y
             // The following does not work; it would need to create a new temporary /
             // unnamed array in storage, but storage is "statically" allocated:
@@ -295,7 +295,7 @@ Array Members
 
         function changeFlagArraySize(uint newSize) public {
             // if the new size is smaller, removed array elements will be cleared
-            m_pairsOfFlags.length = newSize;
+            m_pairsOfFlags = new bool[2][](newSize);
         }
 
         function clear() public {
@@ -303,7 +303,7 @@ Array Members
             delete m_pairsOfFlags;
             delete m_aLotOfIntegers;
             // identical effect here
-            m_pairsOfFlags.length = 0;
+            m_pairsOfFlags = new bool[2][](0);
         }
 
         bytes m_byteData;
@@ -312,7 +312,8 @@ Array Members
             // byte arrays ("bytes") are different as they are stored without padding,
             // but can be treated identical to "uint8[]"
             m_byteData = data;
-            m_byteData.length += 7;
+            for (uint i = 0; i < 7; i++)
+                m_byteData.push(0x00);
             m_byteData[3] = 0x08;
             delete m_byteData[2];
         }

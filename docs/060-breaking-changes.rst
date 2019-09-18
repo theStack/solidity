@@ -21,6 +21,9 @@ This section lists purely syntactic changes that do not affect the behavior of e
 
 * Function ``push(value)`` for dynamic storage arrays do not return the new length anymore.
 
+* Member-access to ``length`` of arrays is now read-only. It's no longer possible to resize arrays
+  assigning a new value to their length. Use ``push()`` or ``push(value)`` instead.
+
 * New reserved keywords: ``virtual``.
 
 Semantic Only Changes
