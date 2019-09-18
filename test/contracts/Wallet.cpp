@@ -208,8 +208,7 @@ contract multiowned {
 			pending.yetNeeded = m_required;
 			// reset which owners have confirmed (none) - set our bitmap to 0.
 			pending.ownersDone = 0;
-			pending.index = m_pendingIndex.length++;
-			m_pendingIndex[pending.index] = _operation;
+			m_pendingIndex.push(_operation);
 		}
 		// determine the bit to set for this owner.
 		uint ownerIndexBit = 2**ownerIndex;
