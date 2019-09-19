@@ -5,7 +5,7 @@ contract C {
         b = 9;
     }
     function f() public returns (uint, function() external, uint) {
-        // Skips a function type which uses two stack slots.
+        // Note that the function type uses two stack slots.
         try this.g() returns (uint a, function() external h, uint b) {
             return (a, h, b);
         } catch {
@@ -14,4 +14,4 @@ contract C {
     function fun() public pure {}
 }
 // ----
-// f() -> 0x1, 7175878113405833249322534082293024008058894263807714200339205169476534272000, 9
+// f() -> 0x1, 0xfdd67305928fcac8d213d1e47bfa6165cd0b87b946644cd0000000000000000, 9

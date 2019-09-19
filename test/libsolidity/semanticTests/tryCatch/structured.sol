@@ -15,5 +15,5 @@ contract C {
 // ====
 // EVMVersion: >=byzantium
 // ----
-// f(bool): true -> 1, 2, 0x60, 7, "success\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+// f(bool): true -> 1, 2, 0x60, 7, "success"
 // f(bool): false -> 0, 0, 0x60, 7, "message"
