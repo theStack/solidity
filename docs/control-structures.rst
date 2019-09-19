@@ -574,8 +574,8 @@ in scope in the block that follows.
 .. note::
 
     If execution reaches a catch-block, then the state-changing effects of
-    the external call were certainly reverted. If execution reaches
-    the success block, these effects were not reverted.
+    the external call have been reverted. If execution reaches
+    the success block, the effects were not reverted.
     If the effects have been reverted, then execution either continues
     in a catch block or the execution of the try/catch statement itself
     reverts (for example due to decoding failures as noted above or
