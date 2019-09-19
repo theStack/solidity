@@ -341,7 +341,7 @@ Like any function, the fallback function can execute complex operations as long 
             // address(test) will not allow to call ``send`` directly, since ``test`` has no payable
             // fallback function.
             // It has to be converted to the ``address payable`` type to even allow calling ``send`` on it.
-            address payable testPayable = payable(address(test)));
+            address payable testPayable = payable(address(test));
 
             // If someone sends Ether to that contract,
             // the transfer will fail, i.e. this returns false here.
