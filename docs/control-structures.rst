@@ -493,6 +493,9 @@ In the above example, ``revert("Not enough Ether provided.");`` returns the foll
     There used to be a keyword called ``throw`` with the same semantics as ``revert()`` which
     was deprecated in version 0.4.13 and removed in version 0.5.0.
 
+
+.. _try-catch:
+
 ``try``/``catch``
 -----------------
 
