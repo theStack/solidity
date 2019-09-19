@@ -433,7 +433,7 @@ bool TypeChecker::visit(VariableDeclaration const& _variable)
 	// * or inside of a struct definition.
 	if (
 		m_scope->isInterface()
-		&& !_variable.isCallableParameter()
+		&& !_variable.isCallableOrCatchParameter()
 		&& !m_insideStruct
 	)
 		m_errorReporter.typeError(_variable.location(), "Variables cannot be declared in interfaces.");
