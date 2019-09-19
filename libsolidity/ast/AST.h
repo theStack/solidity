@@ -696,7 +696,7 @@ public:
 
 private:
 	StateMutability m_stateMutability;
-	Token m_kind;
+	Token const m_kind;
 	ASTPointer<OverrideSpecifier> m_overrides;
 	std::vector<ASTPointer<ModifierInvocation>> m_functionModifiers;
 	ASTPointer<Block> m_body;

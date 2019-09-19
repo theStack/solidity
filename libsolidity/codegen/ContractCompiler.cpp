@@ -436,7 +436,6 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 		{
 			solAssert(receiveEther, "");
 			m_context << *receiveEther;
-			// TODO: should this revert, if value is zero?
 			solAssert(!_contract.isLibrary(), "");
 			solAssert(etherReceiver->isEtherReceiver(), "");
 			solAssert(FunctionType(*etherReceiver).parameterTypes().empty(), "");
