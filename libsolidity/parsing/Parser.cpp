@@ -1099,7 +1099,7 @@ ASTPointer<Statement> Parser::parseStatement()
 				}
 			statement = nodeFactory.createNode<Return>(docString, expression);
 				break;
-			}
+		}
 		case Token::Throw:
 		{
 			statement = ASTNodeFactory(*this).createNode<Throw>(docString);
