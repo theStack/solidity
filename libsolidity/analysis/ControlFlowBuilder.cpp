@@ -91,10 +91,7 @@ bool ControlFlowBuilder::visit(TryStatement const& _tryStatement)
 
 	auto nodes = splitFlow(_tryStatement.clauses().size());
 	for (size_t i = 0; i < _tryStatement.clauses().size(); ++i)
-	{
-		m_currentNode = nodes[i];
-		appendControlFlow(_tryStatement.clauses()[i]->block());
-	}
+		nodes[i] = createFlow(nodes[i], _tryStatement.clauses()[i]->block());
 	mergeFlow(nodes);
 
 	return false;
