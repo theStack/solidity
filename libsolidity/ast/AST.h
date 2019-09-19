@@ -1176,8 +1176,8 @@ private:
 
 /**
  * Clause of a try-catch block. Includes both the successful case and the
- * insuccessful cases.
- * Names are only allowed for the insuccessful cases.
+ * unsuccessful cases.
+ * Names are only allowed for the unsuccessful cases.
  */
 class TryCatchClause: public ASTNode, public Scopable
 {
