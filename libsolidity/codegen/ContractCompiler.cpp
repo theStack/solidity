@@ -869,7 +869,7 @@ void ContractCompiler::handleCatch(vector<ASTPointer<TryCatchClause>> const& _ca
 					break
 				}
 			})")
-			("ErrorSignature", FixedHash<4>(dev::keccak256("Error(string)")).hex())
+			("ErrorSignature", errorHash)
 			("getSig",
 				m_context.evmVersion().hasBitwiseShifting() ?
 				"shr(224, mload(0))" :
