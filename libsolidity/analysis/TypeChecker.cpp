@@ -794,6 +794,8 @@ void TypeChecker::endVisit(TryStatement const& _tryStatement)
 			);
 		size_t len = min(returnTypes.size(), parameters.size());
 		for (size_t i = 0; i < len; ++i)
+		{
+			solAssert(returnTypes[i], "");
 			if (parameters[i] && *parameters[i]->annotation().type != *returnTypes[i])
 				m_errorReporter.typeError(
 					parameters[i]->location(),
@@ -803,6 +805,7 @@ void TypeChecker::endVisit(TryStatement const& _tryStatement)
 					parameters[i]->annotation().type->toString() +
 					"."
 				);
+		}
 	}
 
 	TryCatchClause const* errorClause = nullptr;
